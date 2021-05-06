@@ -274,7 +274,12 @@ class _MathState extends State<Math> {
 
   void resetQuiz() {
     setState(() {
-      Navigator.push(context, MaterialPageRoute(builder: (context) => Math()));
+      Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) => Math(
+                    username: username,
+                  )));
       finalScore = 0;
       questionNumber = 0;
     });

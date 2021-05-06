@@ -2,10 +2,11 @@ import 'dart:async';
 
 import 'package:data_connection_checker/data_connection_checker.dart';
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
+//import 'package:fluttertoast/fluttertoast.dart';
 import 'package:hive/hive.dart';
 import 'package:may6_mathtq/user1.dart';
 //import 'package:http/http.dart' as http;
+import 'Models/checkinternet.dart';
 import 'Models/getsample.dart';
 import 'Models/signup.dart';
 import 'main.dart';
@@ -35,9 +36,8 @@ class _TotalScoreState extends State<TotalScore> {
 
   @override
   void initState() {
-    checkInternet();
+    //checkInternet();
     checkInternetConnectivity();
-    print(box.length);
 
     super.initState();
   }
@@ -48,7 +48,7 @@ class _TotalScoreState extends State<TotalScore> {
   }
 
   checkInternetConnectivity() async {
-    box = await Hive.openBox('players');
+    box = await Hive.openBox('users');
     bool result = await DataConnectionChecker().hasConnection;
     if (result == true) {
       conscore = score.toString();
@@ -60,61 +60,6 @@ class _TotalScoreState extends State<TotalScore> {
 
   saveUser() async {
     box.add(Uscores(username, score, password));
-  }
-
-  //Check Internet Connection
-  checkInternet() async {
-    internet = DataConnectionChecker().onStatusChange.listen((status) {
-      switch (status) {
-        case DataConnectionStatus.connected:
-          print('Internet Availability');
-          {
-            if (box.length > 0) {
-              for (int i = 0; i < box.length; i++) {
-                var users = box.getAt(i);
-                signup(users.username, users.password, users.score);
-                box.deleteAt(i);
-              }
-              Fluttertoast.showToast(
-                  //msg: "Connected to the internet\nSynching to Database",
-                  msg: "Internet is available,\nUpdating database",
-                  toastLength: Toast.LENGTH_SHORT,
-                  gravity: ToastGravity.BOTTOM,
-                  timeInSecForIosWeb: 1,
-                  backgroundColor: Colors.green,
-                  textColor: Colors.white,
-                  fontSize: 16.0);
-            } else {
-              Fluttertoast.showToast(
-                  //msg: "Connected to the internet\nDatabase is up to date",
-                  msg: "Internet is available,\n database updated",
-                  toastLength: Toast.LENGTH_SHORT,
-                  gravity: ToastGravity.BOTTOM,
-                  timeInSecForIosWeb: 1,
-                  backgroundColor: Colors.green,
-                  textColor: Colors.white,
-                  fontSize: 16.0);
-            }
-          }
-          break;
-        case DataConnectionStatus.disconnected:
-          {
-            print('You are disconnected from the internet');
-            print('There is no Internet Connection');
-            Fluttertoast.showToast(
-                msg:
-                    //"Disconnected from the internet\nYou are using Local Database",
-                    "You have no internet connection.\n Local Database Accessed",
-                toastLength: Toast.LENGTH_SHORT,
-                gravity: ToastGravity.BOTTOM,
-                timeInSecForIosWeb: 1,
-                backgroundColor: Colors.red,
-                textColor: Colors.white,
-                fontSize: 16.0);
-            break;
-          }
-      }
-    });
   }
 
   @override
@@ -152,7 +97,11 @@ class _TotalScoreState extends State<TotalScore> {
                   questionNumber = 0;
                   finalScore = 0;
                   Navigator.push(
-                      context, MaterialPageRoute(builder: (context) => Math()));
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => Math(
+                                username: username,
+                              )));
                 },
                 child: Container(
                   padding: const EdgeInsets.all(5),
@@ -180,14 +129,16 @@ class _TotalScoreState extends State<TotalScore> {
                     Navigator.push(context,
                         MaterialPageRoute(builder: (context) => Users()));
                   } else {
+                    internetAvailability();
                     ScaffoldMessenger.of(context)
                       ..hideCurrentSnackBar()
                       ..showSnackBar(
                         SnackBar(
-                          content: Text('No Internet Available'),
+                          content: Text(
+                              'No Internet Available. Unable to view scores.'),
                           backgroundColor: Colors.red,
                           action: SnackBarAction(
-                            label: 'Ok',
+                            label: 'Back',
                             textColor: Colors.white,
                             onPressed: () {
                               ScaffoldMessenger.of(context)
@@ -205,7 +156,7 @@ class _TotalScoreState extends State<TotalScore> {
                     color: Colors.orange,
                   ),
                   child: Text(
-                    "View User Score List",
+                    "View Scores",
                     style: TextStyle(
                       fontSize: 20.0,
                       color: Colors.black,

@@ -1,8 +1,11 @@
+//import 'package:data_connection_checker/data_connection_checker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:hive/hive.dart';
 import 'package:may6_mathtq/user1.dart';
 import 'package:path_provider/path_provider.dart';
+//import 'Models/checkinternet.dart';
+//import 'Models/getsample.dart';
 import 'quizpage.dart';
 
 Box box;
@@ -72,7 +75,7 @@ class _LoginPageState extends State<LoginPage> {
                               fontWeight: FontWeight.bold,
                               color: Colors.black)),
                       SizedBox(
-                        height: 100,
+                        height: 70,
                       ),
                       new TextFormField(
                           controller: usernameController,
@@ -158,7 +161,46 @@ class _LoginPageState extends State<LoginPage> {
                                 color: Colors.black),
                           ),
                         ),
-                      )
+                      ),
+                      SizedBox(height: 10),
+                      // GestureDetector(
+                      //   onTap: () async {
+                      //     bool result =
+                      //         await DataConnectionChecker().hasConnection;
+                      //     if (result == true) {
+                      //       Navigator.push(
+                      //           context,
+                      //           MaterialPageRoute(
+                      //               builder: (context) => Users()));
+                      //     } else {
+                      //       internetAvailability();
+                      //       ScaffoldMessenger.of(context)
+                      //         ..hideCurrentSnackBar()
+                      //         ..showSnackBar(
+                      //           SnackBar(
+                      //             content: Text('No Internet Available'),
+                      //             backgroundColor: Colors.red,
+                      //             action: SnackBarAction(
+                      //               label: 'Ok',
+                      //               textColor: Colors.white,
+                      //               onPressed: () {
+                      //                 ScaffoldMessenger.of(context)
+                      //                     .removeCurrentSnackBar();
+                      //               },
+                      //             ),
+                      //           ),
+                      //         );
+                      //     }
+                      //   },
+                      // child: Text(
+                      //   "View All Scores",
+                      //   style: TextStyle(
+                      //     fontSize: 20.0,
+                      //     color: Colors.black,
+                      //     fontWeight: FontWeight.bold,
+                      //   ),
+                      // ),
+                      //)
                     ],
                   ),
                 ),
